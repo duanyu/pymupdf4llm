@@ -1029,7 +1029,9 @@ def to_markdown(
         parms.written_tables = []  # stores already written tables
         omitted_table_rects = []
         parms.tabs = []
-        if IGNORE_GRAPHICS or not table_strategy:
+        # if IGNORE_GRAPHICS or not table_strategy:
+        # duanyu 提取table与graphic无关，但graphic太多的话也不提取table
+        if not table_strategy or graphics_count > GRAPHICS_LIMIT:
             # do not try to extract tables
             pass
         else:
