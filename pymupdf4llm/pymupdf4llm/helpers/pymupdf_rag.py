@@ -371,8 +371,8 @@ def to_markdown(
         page_chunks = True
         ignore_code = True
     IMG_PATH = image_path
-    if IMG_PATH and write_images is True and not os.path.exists(IMG_PATH):
-        os.mkdir(IMG_PATH)
+    if IMG_PATH and write_images is True and not os.path.exists(f"{IMG_PATH}/images"):
+        os.mkdir(f"{IMG_PATH}/images")
 
     if not isinstance(doc, pymupdf.Document):
         doc = pymupdf.open(doc)
@@ -471,10 +471,15 @@ def to_markdown(
         if write_images is True:
             filename = os.path.basename(parms.filename).replace(" ", "-")
             image_filename = os.path.join(
-                IMG_PATH, f"{filename}-{page.number}-{i}.{IMG_EXTENSION}"
+                f"{IMG_PATH}/images", f"{filename}-{page.number}-{i}.{IMG_EXTENSION}"
             )
             pix.save(image_filename)
-            return image_filename.replace("\\", "/")
+            relative_path = os.path.join(
+                "images", f"{filename}-{page.number}-{i}.{IMG_EXTENSION}"
+            )
+            # 返回相对路径
+            return relative_path.replace("\\", "/")
+            # return image_filename.replace("\\", "/")
         elif embed_images is True:
             # make a base64 encoded string of the image
             data = b2a_base64(pix.tobytes(IMG_EXTENSION)).decode()
